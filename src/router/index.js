@@ -3,6 +3,8 @@ import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import Register from '../views/Register.vue'
 import SingIn from '../views/SignIn.vue'
+import firebase from "firebase/app";
+import "firebase/auth";
 
 Vue.use(VueRouter)
 
@@ -10,7 +12,17 @@ Vue.use(VueRouter)
   {
     path: '/',
     name: 'Home',
-    component: Home
+    component: Home,
+    beforeEnter: (to, from, next) =>{
+      firebase.auth().onAuthStateChanged(user =>{
+        if(user){
+          console.log(user);
+          next()
+        } else {
+          next("/signin")
+        }
+      })
+    }
   },
   {
     path: '/about',
@@ -28,7 +40,7 @@ Vue.use(VueRouter)
   {
     path: "/signin",
     name: "signIn",
-    component: Signin
+    component: SingIn
   },
 ]
 
